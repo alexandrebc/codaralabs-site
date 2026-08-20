@@ -15,33 +15,16 @@ mainNav.querySelectorAll('a').forEach((link) => {
   });
 });
 
-const form = document.getElementById('contact-form');
-const note = document.getElementById('form-note');
+const nextField = document.getElementById('next-field');
+if (nextField) {
+  nextField.value = `${window.location.origin}${window.location.pathname}?enviado=1#contato`;
+}
 
-form.addEventListener('submit', async (e) => {
-  e.preventDefault();
-  const submitBtn = form.querySelector('button[type="submit"]');
-  submitBtn.disabled = true;
+if (window.location.search.includes('enviado=1')) {
+  const form = document.getElementById('contact-form');
+  const note = document.createElement('p');
+  note.className = 'form-note';
   note.style.color = 'var(--accent-emerald)';
-  note.textContent = 'Enviando...';
-
-  try {
-    const response = await fetch(form.action, {
-      method: 'POST',
-      body: new FormData(form),
-      headers: { Accept: 'application/json' },
-    });
-
-    if (response.ok) {
-      note.textContent = 'Mensagem enviada! Entraremos em contato em breve.';
-      form.reset();
-    } else {
-      throw new Error('Falha no envio');
-    }
-  } catch (err) {
-    note.style.color = '#f87171';
-    note.textContent = 'Não foi possível enviar agora. Tente pelo e-mail ou WhatsApp ao lado.';
-  } finally {
-    submitBtn.disabled = false;
-  }
-});
+  note.textContent = 'Mensagem enviada! Entraremos em contato em breve.';
+  form.after(note);
+}
